@@ -47,7 +47,7 @@ func NewService(serviceConfig *ServiceConfig) (*Service, *errortools.Error) {
 func (service *Service) httpRequest(requestConfig *go_http.RequestConfig) (*http.Request, *http.Response, *errortools.Error) {
 	// add authentication header
 	header := http.Header{}
-	header.Set("Authorization", fmt.Sprintf("Bearer %", service.apiToken))
+	header.Set("Authorization", fmt.Sprintf("Bearer %s", service.apiToken))
 	(*requestConfig).NonDefaultHeaders = &header
 
 	return service.httpService.HttpRequest(requestConfig)
