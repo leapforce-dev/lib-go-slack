@@ -21,8 +21,7 @@ type Service struct {
 }
 
 type ServiceConfig struct {
-	ClientName string
-	ApiToken   string
+	ApiToken string
 }
 
 func NewService(serviceConfig *ServiceConfig) (*Service, *errortools.Error) {
