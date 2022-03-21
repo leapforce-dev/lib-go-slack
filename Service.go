@@ -1,4 +1,4 @@
-package dyflexis
+package slack
 
 import (
 	"fmt"

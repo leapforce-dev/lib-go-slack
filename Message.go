@@ -1,7 +1,8 @@
-package dyflexis
+package slack
 
 import (
 	"net/http"
+	"strings"
 
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_http "github.com/leapforce-libraries/go_http"
@@ -63,6 +64,9 @@ func (service *Service) WriteMessage(channelId string, message string) (*Message
 	_, _, e := service.httpRequest(&requestConfig)
 	if e != nil {
 		return nil, e
+	}
+	if !messageRead.Ok {
+		return nil, errortools.ErrorMessagef("response returned ok = false, warning: %s, warnings: %s", messageRead.Warning, strings.Join(messageRead.ResponseMetadata.Warnings, ","))
 	}
 
 	return &messageRead, nil
