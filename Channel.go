@@ -2,6 +2,7 @@ package slack
 
 import (
 	"encoding/json"
+	"fmt"
 	errortools "github.com/leapforce-libraries/go_errortools"
 	go_http "github.com/leapforce-libraries/go_http"
 	"net/http"
@@ -55,18 +56,31 @@ type Channel struct {
 }
 
 func (service *Service) GetChannels() (*[]Channel, *errortools.Error) {
-	var channelsResponse ChannelsResponse
+	var channels []Channel
+	var cursor = ""
 
-	requestConfig := go_http.RequestConfig{
-		Method:        http.MethodGet,
-		Url:           service.url("conversations.list"),
-		ResponseModel: &channelsResponse,
+	for {
+		var channelsResponse ChannelsResponse
+
+		requestConfig := go_http.RequestConfig{
+			Method:        http.MethodGet,
+			Url:           service.url(fmt.Sprintf("conversations.list?cursor=%s", cursor)),
+			ResponseModel: &channelsResponse,
+		}
+
+		_, _, e := service.httpRequest(&requestConfig)
+		if e != nil {
+			return nil, e
+		}
+
+		channels = append(channels, channelsResponse.Channels...)
+		cursor = channelsResponse.ResponseMetadata.NextCursor
+
+		if cursor == "" {
+			break
+		}
+
 	}
 
-	_, _, e := service.httpRequest(&requestConfig)
-	if e != nil {
-		return nil, e
-	}
-
-	return &channelsResponse.Channels, nil
+	return &channels, nil
 }
