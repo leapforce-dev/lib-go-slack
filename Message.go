@@ -14,38 +14,16 @@ type MessageWrite struct {
 }
 
 type MessageRead struct {
-	Ok        bool   `json:"ok"`
-	Channel   string `json:"channel"`
-	Timestamp string `json:"ts"`
-	Message   struct {
-		BotId      string `json:"bot_id"`
-		Type       string `json:"type"`
-		Text       string `json:"text"`
-		User       string `json:"user"`
-		Timestamp  string `json:"ts"`
-		Team       string `json:"team"`
-		BotProfile struct {
-			Id    string `json:"id"`
-			AppId string `json:"app_id"`
-			Name  string `json:"name"`
-			Icons struct {
-				Image36 string `json:"image_36"`
-				Image48 string `json:"image_48"`
-				Image72 string `json:"image_72"`
-			} `json:"icons"`
-			Deleted bool   `json:"deleted"`
-			Updated int64  `json:"updated"`
-			TeamId  string `json:"team_id"`
-		} `json:"bot_profile"`
-	} `json:"message"`
-	Warning          string `json:"warning"`
+	Ok               bool    `json:"ok"`
+	Channel          string  `json:"channel"`
+	Timestamp        string  `json:"ts"`
+	Message          Message `json:"message"`
+	Warning          string  `json:"warning"`
 	ResponseMetadata struct {
 		Warnings []string `json:"warnings"`
 	} `json:"response_metadata"`
 }
 
-// GetEmployees returns all employees
-//
 func (service *Service) WriteMessage(channelId string, message string) (*MessageRead, *errortools.Error) {
 	messageWrite := MessageWrite{
 		Channel: channelId,
